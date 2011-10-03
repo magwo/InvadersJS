@@ -3,10 +3,10 @@
 
 var transform = function(spec) {
 	var that = {};
-	var pos = vector2({x: spec.x, y: spec.y});
+	var pos = vector2(spec.x, spec.y);
 	
 	that.position = function() {
-		return Object.create(pos) // Really need to clone object here for return-by-value?
+		return Object.create(pos);
 	};
 	
 	return that;

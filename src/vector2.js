@@ -1,17 +1,23 @@
 
 
 
-var vector2 = function(spec) {
+var vector2 = function(x, y) {
 	var that = {};
 	
 	that.getX = function() {
-		return spec.x;
+		return x;
 	};
+
 	that.getY = function() {
-		return spec.y;
+		return y;
 	};
+
 	that.magnitude = function() {
-		return Math.sqrt(spec.x * spec.x + spec.y * spec.y);
+		return Math.sqrt(x * x + y * y);
+	}
+
+	that.magnitudeSqrd = function() {
+		return x * x + y * y; 
 	}
 	
 	return that;
