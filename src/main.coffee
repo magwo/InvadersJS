@@ -37,7 +37,7 @@ Director = (@w, @h) ->
   return this
 
 
-StartScene = (@gameScene) ->
+StartScene = (sceneChangeListener, @gameSceneCreator) ->
   
   x = 0.0
   leftKey = 0.0
@@ -60,6 +60,10 @@ StartScene = (@gameScene) ->
   @update = (dt) ->
     x += 200.0 * (rightKey - leftKey) * dt
     
+    if x > 300
+      sceneChangeListener.replaceScene(@gameSceneCreator(this))
+      
+    
     
   @draw = (display) ->
     font = new gamejs.font.Font('30px Sans-serif')
@@ -73,11 +77,14 @@ StartScene = (@gameScene) ->
 
     
 GameScene = (gameOverScene) ->
-  return this
-  
+
+  @draw = (display) ->
+    display.clear()
+    
+  return this  
 
 gamejs.ready(() ->
 
     director = new Director(640, 480)
-    director.start(new StartScene(new GameScene()))
+    director.start(new StartScene(director, (startScene) -> new GameScene()))
 )
