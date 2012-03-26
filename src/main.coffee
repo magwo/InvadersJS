@@ -37,12 +37,6 @@ Director = (@w, @h) ->
 
 
 StartScene = (sceneChanger, gameSceneCreator) ->
-  
-  console.log "ASD"
-
-  console.dir gameSceneCreator
-  console.log "THIS IS:"
-  console.dir this
     
   x = 0.0
   leftKey = 0.0
@@ -69,7 +63,6 @@ StartScene = (sceneChanger, gameSceneCreator) ->
     x += 200.0 * (rightKey - leftKey) * dt
     
     if x > 300
-      console.log "YAR"
       sceneChanger.replaceScene(gameSceneCreator(this))
       
     
@@ -101,7 +94,6 @@ GameScene = (sceneChanger, gameEndedSceneCreator) ->
   @update = (dt) ->
     timeSum += dt
     if timeSum > 2
-      console.log "Asdasdasdsad"
       sceneChanger.replaceScene(gameEndedSceneCreator(this))
     
     
@@ -128,7 +120,6 @@ GameEndedScene = (sceneChanger, startSceneCreator) ->
   return this
 
 gamejs.ready(() ->
-
   console.log "READY!"
   director = new Director(640, 480)
   
