@@ -2,7 +2,6 @@ gamejs = require "gamejs"
 v = require "gamejs/utils/vectors"
 scenes = require "scenes"
 # gamejs.preload([]);
-console.dir v
 
 
 Director = (@w, @h) ->
@@ -37,11 +36,20 @@ Director = (@w, @h) ->
   return this
 
 
-StartScene = (sceneChangeListener, @gameSceneCreator) ->
+StartScene = (sceneChanger, gameSceneCreator) ->
   
+  console.log "ASD"
+
+  console.dir gameSceneCreator
+  console.log "THIS IS:"
+  console.dir this
+    
   x = 0.0
   leftKey = 0.0
   rightKey = 0.0
+  
+  @start = (oldScene) ->
+    console.log "Start scene"
   
   @handleEvent = (event) ->
     #console.dir event
@@ -61,7 +69,8 @@ StartScene = (sceneChangeListener, @gameSceneCreator) ->
     x += 200.0 * (rightKey - leftKey) * dt
     
     if x > 300
-      sceneChangeListener.replaceScene(@gameSceneCreator(this))
+      console.log "YAR"
+      sceneChanger.replaceScene(gameSceneCreator(this))
       
     
     
@@ -69,22 +78,73 @@ StartScene = (sceneChangeListener, @gameSceneCreator) ->
     font = new gamejs.font.Font('30px Sans-serif')
     display.clear()
     rect = new gamejs.Rect(x, 10)
-    display.blit font.render('Hello World'), rect
+    display.blit font.render('Move me to the right to start game'), rect
     return
 
   return this
 
 
     
-GameScene = (gameOverScene) ->
+GameScene = (sceneChanger, gameEndedSceneCreator) ->
+
+  @start = (oldScene) ->
+    console.log "Game scene"
 
   @draw = (display) ->
+    font = new gamejs.font.Font('30px Sans-serif')
     display.clear()
+    rect = new gamejs.Rect(10, 30)
+    display.blit font.render('Game running'), rect
+    return
     
-  return this  
+  timeSum = 0
+  @update = (dt) ->
+    timeSum += dt
+    if timeSum > 2
+      console.log "Asdasdasdsad"
+      sceneChanger.replaceScene(gameEndedSceneCreator(this))
+    
+    
+  return this
+
+GameEndedScene = (sceneChanger, startSceneCreator) ->
+  
+  @start = (oldScene) ->
+    console.log "Game ended"
+    
+  @draw = (display) ->
+    font = new gamejs.font.Font('30px Sans-serif')
+    display.clear()
+    rect = new gamejs.Rect(10, 50)
+    display.blit font.render('Game ended, wait for reset...'), rect
+    return
+    
+  timeSum = 0
+  @update = (dt) ->
+    timeSum += dt
+    if timeSum > 2
+      sceneChanger.replaceScene(startSceneCreator())
+    
+  return this
 
 gamejs.ready(() ->
 
-    director = new Director(640, 480)
-    director.start(new StartScene(director, (startScene) -> new GameScene()))
+  console.log "READY!"
+  director = new Director(640, 480)
+  
+  startSceneCreator = null
+
+  gameEndedSceneCreator = (gameScene) ->
+    console.log "gameEndedSceneCreator called"
+    return new GameEndedScene(director, startSceneCreator)
+    
+  gameSceneCreator = (startScene) ->
+    console.log "gameSceneCreator called"
+    return new GameScene(director, gameEndedSceneCreator)
+    
+  startSceneCreator = () ->
+    console.log "startSceneCreator called"
+    return new StartScene(director, gameSceneCreator)
+    
+  director.start(startSceneCreator())
 )
