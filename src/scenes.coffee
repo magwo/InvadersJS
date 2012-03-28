@@ -2,7 +2,7 @@
 gamejs = require 'gamejs'
 aliens = require 'aliens'
 
-
+#==============================================================================
 exports.StartScene = (sceneChanger, gameSceneCreator) ->
 
   x = 0.0
@@ -25,12 +25,14 @@ exports.StartScene = (sceneChanger, gameSceneCreator) ->
         leftKey = 0
       if event.key == 39
         rightKey = 0
+    return
   
   @update = (dt) ->
     x += 200.0 * (rightKey - leftKey) * dt
     
     if x > 300
       sceneChanger.replaceScene(gameSceneCreator(this))
+    return
       
     
     
@@ -44,7 +46,7 @@ exports.StartScene = (sceneChanger, gameSceneCreator) ->
   return this
 
 
-    
+#==============================================================================
 exports.GameScene = (sceneChanger, gameEndedSceneCreator) ->
 
   sideWallRects = [
@@ -78,6 +80,8 @@ exports.GameScene = (sceneChanger, gameEndedSceneCreator) ->
     
   return this
 
+
+#==============================================================================
 exports.GameEndedScene = (sceneChanger, startSceneCreator) ->
   
   @start = (oldScene) ->
