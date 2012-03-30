@@ -1,54 +1,25 @@
-
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
-  <title>Jasmine Spec Runner</title>
+  <meta charset="utf-8">
+  <title>Mocha Runner</title>
 
-  <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.1.0.rc1/jasmine_favicon.png">
-
-  <link rel="stylesheet" type="text/css" href="deps/jasmine.css">
-  <script type="text/javascript" src="deps/jasmine.js"></script>
-  <script type="text/javascript" src="deps/jasmine-html.js"></script>
+  <link rel="stylesheet" type="text/css" href="deps/mocha.css">
+  <script type="text/javascript" src="deps/mocha.js"></script>
+  <script type="text/javascript" src="deps/expect.js"></script>
   <script type="text/javascript" src="deps/yabble.js"></script>
   <script type="text/javascript" src="deps/gamejs.min.js"></script>
 
   <script type="text/javascript">
-    (function() {
-      
-      
-      var jasmineEnv = jasmine.getEnv();
-      jasmineEnv.updateInterval = 1000;
-
-      var trivialReporter = new jasmine.TrivialReporter();
-
-      jasmineEnv.addReporter(trivialReporter);
-
-      jasmineEnv.specFilter = function(spec) {
-        return trivialReporter.specFilter(spec);
-      };
-
-      var currentWindowOnload = window.onload;
-
-      window.onload = function() {
-        if (currentWindowOnload) {
-          currentWindowOnload();
-        }
-      };
-
-    })();
-  </script>
-
-  
-  <script type="text/javascript">
-    require.setModuleRoot('http://localhost:8080/src/js')
-    require.run('tests', function () { jasmine.getEnv().execute(); }) // <-- Uses require() function somewhere
+    mocha.setup('bdd')
+    require.setModuleRoot('src/js')
+    require.run('tests', function () { mocha.run() }) // <-- Uses require() function somewhere
   </script>
 
 
 </head>
 
 <body>
+  <div id="mocha"></div>
 </body>
 </html>
