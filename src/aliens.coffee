@@ -62,12 +62,12 @@ exports.HiveController = (sideWallRects) ->
       for alien in aliens
         overlap = alien.collidesWithWalls(sideWallRects)
         if overlap?
-          console.log "There are #{aliens.length} aliens and error is #{error}"
           console.log "Moving alien #{alien}"
           for innerAlien in aliens
             innerAlien.move([-overlap.width, 0.0])
           hitWall = true
           break
+      return undefined
     
     @getNextTask = () ->
       if hitWall
