@@ -2,11 +2,7 @@ gamejs = require "gamejs"
 scenes = require "scenes"
 aliens = require "aliens"
 
-describe "example", ->
-  it "1 should equal 1", () ->
-    expect(1).to.equal(1)
-    
-    
+
 describe "alien", ->
   alien = undefined
   
@@ -19,16 +15,16 @@ describe "alien", ->
   it "should move when moved", ->
     alien.move([10, 10])
     expect(alien.rect.topleft).to.eql([10, 10])
-    
-    
+
+
 
 describe "hivecontroller", ->
   
   hiveController = undefined
   beforeEach ->
     sideWallRects = [
-      new gamejs.Rect(0, 0, -100, 480),
-      new gamejs.Rect(640, 0, 100, 480)
+      new gamejs.Rect(-100, 0, 100, 3000),
+      new gamejs.Rect(640, 0, 100, 3000)
       ]
     hiveController = new aliens.HiveController(sideWallRects)
     
@@ -39,6 +35,20 @@ describe "hivecontroller", ->
     alienHive = [new aliens.Alien(new gamejs.Rect(50, 0, 30, 30))]
     posBefore = alienHive[0].rect.topleft
     hiveController.update(0.01, alienHive)
+    expect(alienHive[0].rect.topleft).to.not.equal(posBefore)
+    
+  longTestDuration = 200
+  it "should move aliens for #{longTestDuration} seconds", ->
+    alienHive = (new aliens.Alien(new gamejs.Rect(50, 0, 30, 30)) for i in [0...10])
+    expect(alienHive.length).to.eql(10)
+    posBefore = alienHive[0].rect.topleft
+    timer = 0.0
+    while timer < longTestDuration
+      dt = 0.05
+      timer += dt
+      hiveController.update(dt, alienHive)
+    
+    console.log alienHive[0].rect
     expect(alienHive[0].rect.topleft).to.not.equal(posBefore)
     
     
@@ -73,8 +83,10 @@ describe "startscene", ->
     scene.update(10.0)
     expect(sceneChanger.replaceSceneCalled).to.be(true)
     expect(nextSceneCreatorCalled).to.be(true)
-    
-    
+
+  
+  
+  
     
     
     

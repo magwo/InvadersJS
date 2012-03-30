@@ -38,7 +38,7 @@ exports.StartScene = (sceneChanger, gameSceneCreator) ->
     
   @draw = (display) ->
     font = new gamejs.font.Font('30px Sans-serif')
-    display.clear()
+    display.clear() # to save battery when developing
     rect = new gamejs.Rect(x, 10)
     display.blit font.render('Move me to the right to start game'), rect
     return
@@ -47,14 +47,16 @@ exports.StartScene = (sceneChanger, gameSceneCreator) ->
 
 
 #==============================================================================
-exports.GameScene = (sceneChanger, gameEndedSceneCreator) ->
-
-  sideWallRects = [
-    new gamejs.Rect(0, 0, -100, 480),
-    new gamejs.Rect(640, 0, 100, 480)
-    ]
+exports.GameScene = (sceneChanger, gameEndedSceneCreator, options) ->
+  unless options
+    options =
+      sideWallRects: [
+        new gamejs.Rect(-100, 0, 100, 3000)
+        new gamejs.Rect(640, 0, 100, 3000) ]
+      alienMoveSpeed: 100
+      
   alienHive = (new aliens.Alien(new gamejs.Rect(i*50, 10, 30, 30)) for i in [0...10])
-  hiveController = new aliens.HiveController(sideWallRects)
+  hiveController = new aliens.HiveController(options.sideWallRects, options.alienMoveSpeed)
   
 
   @start = (oldScene) ->
@@ -66,7 +68,7 @@ exports.GameScene = (sceneChanger, gameEndedSceneCreator) ->
     rect = new gamejs.Rect(10, 30)
     display.blit font.render('Game running'), rect
     for alien, i in alienHive
-      display.blit font.render("A#{i}", alien.rect)
+      display.blit font.render("A#{i}"), alien.rect
     
     return
     
@@ -88,16 +90,16 @@ exports.GameEndedScene = (sceneChanger, startSceneCreator) ->
     console.log "Game ended"
     
   @draw = (display) ->
-    font = new gamejs.font.Font('30px Sans-serif')
-    display.clear()
-    rect = new gamejs.Rect(30, 50)
-    display.blit font.render('Game over!'), rect
+    #font = new gamejs.font.Font('30px Sans-serif')
+    #display.clear()
+    #rect = new gamejs.Rect(30, 50)
+    #display.blit font.render('Game over!'), rect
     return
     
   timeSum = 0
   @update = (dt) ->
     timeSum += dt
-    if timeSum > 2
+    if timeSum > 2000
       sceneChanger.replaceScene(startSceneCreator())
     
   return this
