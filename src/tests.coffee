@@ -40,3 +40,41 @@ describe "hivecontroller", ->
     posBefore = alienHive[0].rect.topleft
     hiveController.update(0.01, alienHive)
     expect(alienHive[0].rect.topleft).to.not.equal(posBefore)
+    
+    
+describe "startscene", ->
+
+  sceneChanger = undefined
+  scene = undefined
+  beforeEach ->
+    sceneChanger = 
+      replaceSceneCalled: false
+      replaceScene: ->
+        @replaceSceneCalled = true
+    
+    scene = new scenes.StartScene(sceneChanger)
+    
+    
+  it "should construct without exceptions", ->
+    expect(scene).to.be.an("object")
+    
+  it "should transition to next scene on right events", ->
+    nextSceneCreatorCalled = false
+    nextSceneCreator = ->
+      nextSceneCreatorCalled = true
+    console.dir sceneChanger
+    scene = new scenes.StartScene(sceneChanger, nextSceneCreator)
+    
+    event = new gamejs.event.Event()
+    event.type = gamejs.event.KEY_DOWN
+    event.key = gamejs.event.K_RIGHT
+    scene.handleEvent(event)
+    
+    scene.update(10.0)
+    expect(sceneChanger.replaceSceneCalled).to.be(true)
+    expect(nextSceneCreatorCalled).to.be(true)
+    
+    
+    
+    
+    
