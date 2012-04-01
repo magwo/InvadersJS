@@ -26,7 +26,7 @@ describe "hivecontroller", ->
       new gamejs.Rect(-100, 0, 100, 3000),
       new gamejs.Rect(640, 0, 100, 3000)
       ]
-    hiveController = new aliens.HiveController(sideWallRects)
+    hiveController = new aliens.HiveController(sideWallRects, 100)
     
   it "should construct without exceptions", ->
     expect(hiveController).to.be.an("object")
@@ -36,15 +36,30 @@ describe "hivecontroller", ->
     posBefore = alienHive[0].rect.topleft
     hiveController.update(0.01, alienHive)
     expect(alienHive[0].rect.topleft).to.not.equal(posBefore)
-    
+  
+  it "should never move aliens outside walls", ->
+    alienHive = (new aliens.Alien(new gamejs.Rect(50*i, 0, 30, 30)) for i in [0...10])
+    t = 0.0
+    while t < 50
+      dt = 0.1 + Math.random() * 0.01
+      t += dt
+      hiveController.update(dt, alienHive)
+      for alien in alienHive
+        if alien.rect.left < 0.0
+          throw new Error("Passed left wall")
+        if alien.rect.right > 640.0
+          throw new Error("Passed right wall")
+        
+        
+  
   longTestDuration = 200
   it "should move aliens for #{longTestDuration} seconds", ->
-    alienHive = (new aliens.Alien(new gamejs.Rect(50, 0, 30, 30)) for i in [0...10])
+    alienHive = (new aliens.Alien(new gamejs.Rect(50*i, 0, 30, 30)) for i in [0...10])
     expect(alienHive.length).to.eql(10)
     posBefore = alienHive[0].rect.topleft
     timer = 0.0
     while timer < longTestDuration
-      dt = 0.05
+      dt = 0.05 + Math.random() * 0.01
       timer += dt
       hiveController.update(dt, alienHive)
     

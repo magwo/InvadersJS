@@ -28,9 +28,8 @@ exports.Alien = (rect) ->
   
   
   
-exports.HiveController = (sideWallRects) ->
+exports.HiveController = (sideWallRects, moveSpeed) ->
   
-  moveSpeed = 100
   yOffset = 0.0
   currentTask = null
   
@@ -61,9 +60,9 @@ exports.HiveController = (sideWallRects) ->
       for alien in aliens
         overlap = alien.collidesWithWalls(sideWallRects)
         if overlap?
-          console.log "Moving alien #{alien}"
+          toMove = -Math.abs(overlap.width)*direction
           for innerAlien in aliens
-            innerAlien.move([-overlap.width, 0.0])
+            innerAlien.move([toMove, 0.0])
           hitWall = true
           break
       return undefined

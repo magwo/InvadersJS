@@ -54,10 +54,12 @@ exports.GameScene = (sceneChanger, gameEndedSceneCreator, options) ->
         new gamejs.Rect(-100, 0, 100, 3000)
         new gamejs.Rect(640, 0, 100, 3000) ]
       alienMoveSpeed: 100
+      earthRect: new gamejs.Rect(0, 480, 640, 1000)
       
   alienHive = (new aliens.Alien(new gamejs.Rect(i*50, 10, 30, 30)) for i in [0...10])
   hiveController = new aliens.HiveController(options.sideWallRects, options.alienMoveSpeed)
   
+  @humanity = "We're ok"
 
   @start = (oldScene) ->
     console.log "Game scene"
@@ -72,14 +74,15 @@ exports.GameScene = (sceneChanger, gameEndedSceneCreator, options) ->
     
     return
     
-  timeSum = 0
   @update = (dt) ->
     hiveController.update(dt, alienHive)
-    timeSum += dt
-    if timeSum > 10
-      sceneChanger.replaceScene(gameEndedSceneCreator(this))
-    
-    
+    for alien in alienHive
+      if alien.rect.collideRect(options.earthRect)
+        console.log "Oh shit"
+        @humanity = undefined # :(
+        sceneChanger.replaceScene(gameEndedSceneCreator(this))
+        break
+            
   return this
 
 
