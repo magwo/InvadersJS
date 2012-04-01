@@ -1,5 +1,4 @@
 gamejs = require 'gamejs'
-common = require 'common'
 
 exports.Alien = (rect) ->
   
