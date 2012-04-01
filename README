@@ -1,3 +1,3 @@
-Space invaders implementation in JavaScript, aiming to have high testability, high test coverage and flexible architecture.
+Space invaders implementation in CoffeeScript, aiming to have high testability, high test coverage, high semantic density and flexible architecture.
 
 Author: Magnus Wolffelt, magnus.wolffelt@gmail.com
