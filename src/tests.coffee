@@ -1,6 +1,18 @@
 gamejs = require "gamejs"
 scenes = require "scenes"
 aliens = require "aliens"
+shooter = require "shooter"
+
+
+describe "shooter", ->
+  shooterObj = undefined
+  
+  beforeEach ->
+    shooterObj = new shooter.Shooter(new gamejs.Rect(0, 0, 30, 30))
+  
+  it "should construct without exceptions", ->
+    expect(shooterObj).to.be.an("object")
+  
 
 
 describe "alien", ->

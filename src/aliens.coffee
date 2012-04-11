@@ -1,31 +1,29 @@
 gamejs = require 'gamejs'
 
-exports.Alien = (rect) ->
+
+class Alien extends gamejs.sprite.Sprite
+  constructor: (@rect) ->
+    console.log "Rect is #{@rect}"
+    @initialYOffset = @rect.top
   
-  console.log "Input rect is #{rect}"
-  @rect = rect
-  console.log "Our rect is now #{@rect}"
   
-  @initialYOffset = @rect.top
-  
-  @setPos = (newPos) ->
+  setPos: (newPos) ->
     @rect.center(newPos)
     
-  @setYPos = (yPos) ->
+  setYPos: (yPos) ->
     @rect.center = ([@rect.center[0], yPos])
 
-  @move = (delta) ->
+  move: (delta) ->
     @rect.moveIp(delta)
   
-  @collidesWithWalls = (wallRects) ->
+  collidesWithWalls: (wallRects) ->
     for wallRect in wallRects
       overlap = @rect.clip(wallRect)
       if overlap.width != 0 or overlap.height != 0
         return overlap
     return null
-  
-  return this
-  
+
+exports.Alien = Alien
   
   
 exports.HiveController = (sideWallRects, moveSpeed) ->

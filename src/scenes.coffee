@@ -1,6 +1,7 @@
 
 gamejs = require 'gamejs'
 aliens = require 'aliens'
+shooter = require 'shooter'
 
 #==============================================================================
 exports.StartScene = (sceneChanger, gameSceneCreator) ->
@@ -58,11 +59,18 @@ exports.GameScene = (sceneChanger, gameEndedSceneCreator, options) ->
       
   alienHive = (new aliens.Alien(new gamejs.Rect(i*50, 10, 30, 30)) for i in [0...10])
   hiveController = new aliens.HiveController(options.sideWallRects, options.alienMoveSpeed)
-  
+  shooterObj = new shooter.Shooter(new gamejs.Rect(320, 400, 30, 30), (rect) ->
+    return new shooter.Bullet(rect, -300)
+    )
   @humanity = "We're ok"
 
   @start = (oldScene) ->
     console.log "Game scene"
+    
+  @handleEvent = (event) ->
+    #console.dir event
+    shooterObj.handleEvent(event)
+    return
 
   @draw = (display) ->
     font = new gamejs.font.Font('12px Sans-serif')
@@ -72,9 +80,11 @@ exports.GameScene = (sceneChanger, gameEndedSceneCreator, options) ->
     for alien, i in alienHive
       display.blit font.render("A#{i}"), alien.rect
     
+    shooterObj.draw(display)
     return
     
   @update = (dt) ->
+    shooterObj.update(dt)
     hiveController.update(dt, alienHive)
     for alien in alienHive
       if alien.rect.collideRect(options.earthRect)
